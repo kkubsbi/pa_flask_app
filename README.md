@@ -3,6 +3,18 @@
 Following steps from the below:
 https://blog.pythonanywhere.com/121/
 
+Those instructions include adding git-based version control. To connect to your own remote GitHub repository, you need to:
+
+1. Generate a new SSH key with `ssh-keygen -t ed25519 -C "your_email_goes_here@example.com"` (in the pythonanywhere server bash)
+2. In the same shell, run `cat ~/.ssh/id_ed25519.pub` and copy the output
+3. On the GitHub website, navigate to your [Settings > "SSH and GPG keys"](https://github.com/settings/keys), click "Add new SSH Key," and in the provided input, paste your public key.
+
+Now, you are authenticated to your GH account. Next, connect the local repo to remote as follows:
+
+1. Check that you've already run the git setup commands from the above PythonAnywhere tutorial.
+2. Rename your branch: `git branch -m master main` - the tutorial uses 'master' which is outdated. Now, 'main' is the default branch main branch name.
+3. Connect your local and remote directories: `git push -u origin main`
+
 ## Changing table schema
 
 Changing schema will require migration. To keep things simple, you can follow these steps:
