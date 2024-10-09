@@ -59,7 +59,7 @@ class CommentTS(db.Model):
 
 Next, open an interactive Python session in the `mysite` directory, and execute the following 3 lines:
 
-```
+```sh
 10:58 ~/mysite (main)$ python
 Python 3.10.5 (main, Jul 22 2022, 17:09:35) [GCC 9.4.0] on linux
 Type "help", "copyright", "credits" or "license" for more information.
@@ -70,7 +70,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 
 You can confirm that this worked in your MySQL shell:
 
-```
+```mysql
 mysql> SHOW TABLES;
 +----------------------------+
 | Tables_in_kkubsbi$comments |
@@ -79,4 +79,39 @@ mysql> SHOW TABLES;
 | comments_ts                |
 +----------------------------+
 2 rows in set (0.01 sec)
+```
+
+Once you confirm that the app is working well with the new schema, you can migrate the old data. This can be done via Python, or directly via MySQL:
+
+```mysql
+INSERT INTO comments_ts (content, timestamp)
+SELECT content, NOW()
+FROM comments;
+```
+
+If that goes well - check that it is okay to avoid data loss! - you can drop the old table:
+
+```mysql
+
+mysql> select * from comments_ts;
++----+---------------------+---------------------+
+| id | content             | timestamp           |
++----+---------------------+---------------------+
+|  1 | test1               | 2024-10-09 11:13:35 |
+|  2 | test2               | 2024-10-09 11:13:38 |
+|  3 | test3               | 2024-10-09 11:13:40 |
+|  4 | migrated1           | 2024-10-09 11:16:54 |
+|  5 | migrated2           | 2024-10-09 11:16:54 |
+|  6 | migrated3           | 2024-10-09 11:16:54 |
++----+---------------------+---------------------+
+10 rows in set (0.01 sec)
+mysql> drop table comments;
+Query OK, 0 rows affected (0.06 sec)
+mysql> show tables;
++----------------------------+
+| Tables_in_kkubsbi$comments |
++----------------------------+
+| comments_ts                |
++----------------------------+
+1 row in set (0.00 sec)
 ```
